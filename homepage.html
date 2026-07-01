@@ -1,0 +1,447 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Discover Your World — Hero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+  }
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100vh;
+    padding: 32px 40px;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(20,25,30,0.35) 0%, rgba(20,25,30,0.15) 40%, rgba(10,12,15,0.55) 100%);
+    z-index: -1;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+  }
+
+  .menu-toggle, .search-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 2px;
+    font-size: 14px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #fff;
+  }
+  .menu-wrap {
+    position: relative;
+  }
+
+  .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: calc(100% + 16px);
+    left: 0;
+    min-width: 220px;
+    background: #f2efe9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    z-index: 10;
+  }
+
+  .dropdown-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-menu a {
+    padding: 14px 24px;
+    color: #2b2b2b;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    transition: background 0.2s ease;
+  }
+
+  .dropdown-menu a:last-child { border-bottom: none; }
+  .dropdown-menu a:hover { background: rgba(0,0,0,0.06); }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+  }
+
+  .logo .compass {
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    max-width: 700px;
+  }
+
+  .hero-content h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: 4px;
+  }
+
+  .hero-content p {
+    font-size: 15px;
+    letter-spacing: 1px;
+    opacity: 0.9;
+  }
+
+  .pill-nav {
+    display: flex;
+    align-items: center;
+    background: #f2efe9;
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+
+  .pill-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 28px;
+    color: #2b2b2b;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+  }
+
+  .pill-nav a:hover { background: rgba(0,0,0,0.06); }
+
+  .pill-nav a.active {
+    background: #2b2b2b;
+    color: #f2efe9;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 600px) {
+    .pill-nav { flex-wrap: wrap; border-radius: 20px; }
+    .topbar { font-size: 12px; }
+  }
+  .secondary-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 48px;
+    padding: 20px 40px;
+    border-bottom: 1px solid #e5e2da;
+  }
+
+  .secondary-nav a {
+    text-decoration: none;
+    color: #2b2b2b;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  .secondary-nav a:hover { opacity: 0.6; }
+  .worlds-section {
+    padding: 48px 40px 64px;
+  }
+
+  .worlds-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .worlds-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 480px;
+  }
+
+  .worlds-intro .eyebrow {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #6b6b6b;
+    font-weight: 500;
+  }
+
+  .worlds-intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(26px, 3vw, 36px);
+    color: #1c1c1c;
+    line-height: 1.25;
+  }
+
+  .view-all-btn {
+    align-self: flex-start;
+    padding: 12px 26px;
+    border: 1px solid #2b2b2b;
+    border-radius: 999px;
+    background: none;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .view-all-btn:hover { background: #2b2b2b; color: #fff; }
+
+  .region-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    color: #6b6b6b;
+    text-align: right;
+  }
+
+  .region-filters .region-all {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    color: #1c1c1c;
+    font-weight: 500;
+  }
+
+  .region-filters .region-all::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #1c1c1c;
+  }
+
+  .region-filters span { cursor: pointer; }
+  .region-filters span:hover { color: #1c1c1c; }
+  .worlds-gallery {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    padding-bottom: 8px;
+  }
+
+  .worlds-gallery::-webkit-scrollbar { height: 6px; }
+  .worlds-gallery::-webkit-scrollbar-thumb { background: #ccc; border-radius: 999px; }
+
+  .world-card {
+    flex: 0 0 320px;
+    height: 420px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    scroll-snap-align: start;
+  }
+
+  .worlds-gallery { scroll-snap-type: x mandatory; }
+
+  .world-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 700px) {
+    .worlds-header { flex-direction: column; }
+    .region-filters { text-align: left; }
+    .region-filters .region-all { justify-content: flex-start; }
+    .secondary-nav { gap: 24px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+  <section class="hero">
+
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="hero-home.mp4" type="video/mp4">
+    </video>
+
+    <div class="topbar">
+      <div class="menu-wrap">
+        <button class="menu-toggle" onclick="toggleMenu()">☰ MENU</button>
+        <nav class="dropdown-menu" id="dropdownMenu">
+          <a href="#">Our World</a>
+          <a href="#">Real Estate</a>
+          <a href="#">Experience</a>
+          <a href="#">Gallery</a>
+        </nav>
+      </div>
+      <div class="logo">
+        <span class="compass">✦</span>
+        Discovery Land Company
+      </div>
+      <button class="search-toggle">🔍 SEARCH</button>
+    </div>
+
+    <div class="hero-content">
+      <h1>DISCOVER YOUR WORLD</h1>
+      <p>Select from locations below or scroll to discover more.</p>
+    </div>
+
+    
+    <nav class="pill-nav">
+      <a href="#">Our Worlds</a>
+      <a href="#">Real Estate</a>
+      <a href="#">Experiences</a>
+      <a href="#" class="active">Locations</a>
+    </nav>
+
+  </section>
+
+ 
+  <nav class="secondary-nav">
+    <a href="#">Our Worlds</a>
+    <a href="#">Real Estate</a>
+    <a href="#">Experiences</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  
+
+  <section class="worlds-section">
+
+    <div class="worlds-header">
+      <div class="worlds-intro">
+        <span class="eyebrow">OUR WORLDS</span>
+        <h2>Browse our private residential communities and resorts.</h2>
+        <button class="view-all-btn">VIEW ALL</button>
+      </div>
+
+      <div class="region-filters">
+        <span class="region-all">All</span>
+        <span>Central America &amp; Caribbean</span>
+        <span>United States</span>
+        <span>Europe &amp; UAE</span>
+      </div>
+    </div>
+
+    
+    <div class="worlds-gallery">
+      <div class="world-card">
+        <img src="1779435151-territory_lifestyle-3-2.avif" alt="Coastal resort community at sunset">
+      </div>
+      <div class="world-card">
+        <img src="1777565054-ct_cover.avif" alt="Speedboat on open water">
+      </div>
+      <div class="world-card">
+        <img src="1777382297-ext05_resort-arrival_b5_1.avif" alt="Modern lakeside clubhouse">
+      </div>
+      <div class="world-card">
+        <img src="1774020898-discovery-dunes.avif" alt="Aerial view of coastline">
+      </div>
+       <div class="world-card">
+        <img src="z.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="a.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="b.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="c.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="k.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="g.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="o.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="t.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="s.avif" alt="Aerial view of coastline">
+      </div>
+      <div class="world-card">
+        <img src="p.avif" alt="Aerial view of coastline">
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('dropdownMenu').classList.toggle('open');
+    }
+
+    document.addEventListener('click', function (e) {
+      const wrap = document.querySelector('.menu-wrap');
+      const menu = document.getElementById('dropdownMenu');
+      if (!wrap.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+  </script>
+
+
+</body>
+</html>
